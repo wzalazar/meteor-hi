@@ -2,6 +2,10 @@ Meteor.publish('me', function() {
     return Meteor.users.find({ _id: this.userId });
 });
 
+Meteor.publish('users', function() {
+    return Meteor.users.find({});
+});
+
 Meteor.publish('allUsersOutMe', function() {
     return Meteor.users.find({_id: {$ne: this.userId} },
                              { 
