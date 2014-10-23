@@ -1,5 +1,3 @@
-Messages = new Meteor.Collection("messages");
-
 Schema = {};
 
 Schema.Messages= new SimpleSchema({
@@ -13,9 +11,6 @@ Schema.Messages= new SimpleSchema({
                 return users;
         	}
         }
-    },
-    chatRoomId: {
-        type: String
     },
     message: {
         type: String
@@ -34,4 +29,24 @@ Schema.Messages= new SimpleSchema({
     }
 })
 
-Messages.attachSchema(Schema.Messages);
+Schema.Rooms= new SimpleSchema({
+    name:{
+        type: String   
+    },
+    dateCreate: {
+        type: Date
+    },
+    users:{
+        type:[Object]
+    },
+    "users.$.userId":{
+        type: String
+    },
+    messages:{
+    	type: [Schema.Messages],
+        optional: true
+    }
+})
+
+Rooms = new Meteor.Collection("rooms");
+Rooms.attachSchema(Schema.Rooms);
