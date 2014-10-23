@@ -1,5 +1,48 @@
 Schema = {};
 
+Schema.UserFriend= new SimpleSchema({
+    friendId:{
+        type: String,
+        autoform:{
+            options: function(){
+                var users= _.map(Meteor.users.find().fetch(), function(user){ 
+                      return { "label": user.emails[0].address,"value": user._id }
+                });
+                return users;
+            }
+        }   
+    },
+    dateAdd: {
+        type: Date
+    },
+    accept: {
+        type: Boolean
+    }
+})
+
+Schema.UserInvitation = new SimpleSchema({
+    whoSendInvitationId: {
+        type: String,
+        autoform:{
+            options: function(){
+                var users= _.map(Meteor.users.find().fetch(), function(user){ 
+                      return { "label": user.emails[0].address,"value": user._id }
+                });
+                return users;
+            }
+        }
+    },
+    dateSendInvitation: {
+        type: Date
+    },
+    readInvitation: {
+        type: Boolean
+    },
+    acceptInvitation: {
+        type: Boolean
+    }
+})
+
 Schema.UserCountry = new SimpleSchema({
     name: {
         type: String
@@ -95,6 +138,14 @@ Schema.User = new SimpleSchema({
         type: [String],
         optional: true,
         blackbox: true
+    },
+    invitations: {
+        type: [Schema.UserInvitation],
+        optional: true,
+    },
+    friends: {
+        type: [Schema.UserFriend],
+        optional: true,
     }
 });
 
