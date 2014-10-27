@@ -1,16 +1,23 @@
 <template name="dashboard">
-  
-<div class="container">
-  <div class="jumbotron">
-    <h1>Dashboard</h1>
-    <p>This example is a quick dashboard with bootstrap includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-    <p>Here you must to create your own application.</p>
-    {{#if isInRole 'admin'}}
-    <p>
-      <a class="btn btn-lg btn-primary" href="{{pathFor 'adminDashboard'}}" role="button">View my admin »</a>
-    </p>
+    {{#if currentUser}}
+      <section class="vbox" style="display:table;width:100%">
+          {{> header}}
+          <section>
+              <section class="hbox stretch">
+                  {{> aside}}
+                  <section id="content">
+                      <section class="hbox stretch">
+                          <section class="animated fadeInRight">
+                              <section class="vbox">
+                                  {{> yield region='content'}}
+                              </section>
+                          </section>
+                          {{> yield region='aside'}}
+                      </section>
+                      <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
+                  </section>
+              </section>
+          </section>
+      </section>
     {{/if}}
-  </div>
-</div>
-
 </template>

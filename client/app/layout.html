@@ -1,17 +1,3 @@
 <template name="layout">
-  {{#if currentUser}}
-    {{> navBar}}
-  {{/if}}
-  
-  <aside>
-    {{> yield "aside"}}
-  </aside>
-
-  <section>
     {{> yield}}
-  </section>
-
-  <footer>
-    {{> yield "footer"}}
-  </footer>
 </template>

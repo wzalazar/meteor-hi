@@ -1,0 +1,49 @@
+<template name="search">	
+    <section class="scrollable wrapper">
+        <div class="row">
+        	{{#each users}}
+		            <div class="col-lg-3">
+		                <section class="panel panel-default">
+		                    <div class="panel-body">
+		                        <div class="clearfix text-center m-t">
+		                            <div class="inline">
+		                                <div class="easypiechart easyPieChart" data-percent="75" data-line-width="5" data-bar-color="#4cc0c1" data-track-color="#f5f5f5" data-scale-color="false" data-size="134" data-line-cap="butt" data-animate="1000" style="width: 134px; height: 134px; line-height: 134px;">
+		                                    <div class="thumb-lg">
+		                                        <img src="{{getImageUser this._id}}" class="img-circle">
+		                                    </div>
+		                                    <canvas width="134" height="134"></canvas>
+		                                </div>
+		                                <div class="h4 m-t m-b-xs">{{getName this._id}}</div>
+		                                <small class="text-muted m-b">{{this.profile.job}}</small>	                             
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <footer class="panel-footer bg-info text-center">
+		                        <div class="row pull-out">
+		                            <div class="col-xs-14 dk">
+		                                <div class="padder-v">	
+		                                {{#if isMyFriend this._id}}	
+		                                   		<span  class="m-b-xs block text-white">Friend<i class="i i-plus i-2x icon-fix-position"></i></span>
+		                                {{else}}
+		                                    {{#if thereAreInvitation this._id}}
+		                                		{{#if isInvitationSendForMe this._id}}	 
+                                					<span  class="m-b-xs block text-white">Invitation Pending <i class="i i-clock i-2x icon-fix-position" ></i></span>
+                                				{{/if}}	
+                                				{{#if isInvitationReceiveForYou this._id}}	 
+                                					<span id="acceptInvitation" class="m-b-xs block text-white">Accept invitation<i class="i i-checkmark i-2x icon-fix-position"></i></span>
+                                				{{/if}}	
+                                			{{else}}
+                                				<span id="createInvitation" class="m-b-xs block text-white">Add user <i class="i i-plus i-2x icon-fix-position"></i></span>	
+                                			{{/if}}
+		                                {{/if}}		
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </footer>
+		                </section>
+		            </div>	          
+            {{/each}}
+        </div>
+    </section>
+</template>
+
