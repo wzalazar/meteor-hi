@@ -1,0 +1,103 @@
+<template name="chatAside">
+    <aside class="aside-md bg-primary dker {{chatWithSomeoneClass}}" id="sidebar">
+        <section class="vbox">
+            <section class="scrollable">
+                <h4 class="font-thin text-white padder m-b-none m-t">Chat</h4>
+                {{#if addUsers}}{{else}}
+                <div class="wrapper text-u-c">
+                    <strong>Groups</strong>
+                </div>
+                <ul class="list-group no-bg no-borders auto m-b-none">
+                    {{#each groups}} 
+                    <li class="list-group-item">
+                        <div class="media groupChat">
+                            <a href="#" class="pull-right m-t-sm">
+                                <span class="badge badge-empty {{animatedClassGroup this._id}}">{{messageWithoutReadGroup this._id}}
+                                </span>
+                            </a>
+                            {{#each this.users}} 
+                                {{#if notMe this.userId}}
+                                    <span class="pull-left thumb-sm avatar">
+                                        <img src="{{getImageUser this.userId}}" alt="..." class="img-circle"> <i class="on b-white bottom"></i> 
+                                    </span>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+                <div class="wrapper text-u-c">
+                    <strong>Online</strong>
+                </div>
+                <ul class="list-group no-bg no-borders auto m-b-none">
+                    {{#each friends}} {{#if statusConnect this.friendId}}
+                    <li class="list-group-item">
+                        <div class="media friend">
+                            {{#if addUsers}}
+                            {{else}}
+                            <a href="#" class="pull-right m-t-sm">
+                                <span class="badge badge-empty {{animatedClass this}}">
+                                    {{messageWithoutRead this}}</span>
+                            </a>
+                            {{/if}}
+
+                            <span class="pull-left thumb-sm avatar">
+                                <img src="{{getImageUser this.friendId}}" alt="..." class="img-circle"> <i class="on b-white bottom"></i> 
+                            </span>
+                            <div class="media-body">
+                                <div><a href="#" id="chatWithFriend">{{getName this.friendId}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if addUsers}}
+                                {{#if notChatWithFriend this.friendId}}
+                                    <div class="checkbox i-checks">
+                                        <label>
+                                            <input data-friend="{{this.friendId}}" class="checkAddFriend" type="checkbox" value=""> <i></i>
+                                        </label>
+                                    </div>
+                                {{/if}}
+                        {{/if}}
+                    </li>
+                    {{/if}} {{/each}}
+                </ul>
+                <div class="wrapper text-u-c">
+                    <strong>Offline</strong>
+                </div>
+                 <ul class="list-group no-bg no-borders auto m-b-none">
+                    {{#each friends}} {{#if statusConnect this.friendId}}{{else}}
+                    <li class="list-group-item">
+                        <div class="media friend">
+                            {{#if addUsers}}
+                            {{else}}
+                            <a href="#" class="pull-right m-t-sm">
+                                <span class="badge badge-empty {{animatedClass this}}">
+                                    {{messageWithoutRead this}}</span>
+                            </a>
+                            {{/if}}
+
+                            <span class="pull-left thumb-sm avatar">
+                                <img src="{{getImageUser this.friendId}}" alt="..." class="img-circle"> <i class="on b-white bottom"></i> 
+                            </span>
+                            <div class="media-body">
+                                <div><a href="#" id="chatWithFriend">{{getName this.friendId}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if addUsers}}
+                                {{#if notChatWithFriend this.friendId}}
+                                    <div class="checkbox i-checks">
+                                        <label>
+                                            <input data-friend="{{this.friendId}}" class="checkAddFriend" type="checkbox" value=""> <i></i>
+                                        </label>
+                                    </div>
+                                {{/if}}
+                        {{/if}}
+                    </li>
+                    {{/if}} {{/each}}
+                </ul>
+            </section>
+        </section>
+    </aside>
+</template>

@@ -20,4 +20,5 @@ alanning:roles
 aldeed:autoform
 service-configuration
 accounts-facebook
+mrt:iron-router-progress
 
