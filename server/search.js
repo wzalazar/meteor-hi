@@ -6,6 +6,6 @@ Meteor.methods({
     		readInvitation: false,
     		acceptInvitation: false
     	}
-        Meteor.users.update(this.userId,{ $push : { 'invitations' : invitation } });
+        Meteor.users.update(userId,{ $push : { 'invitations' : invitation } });
     }
 });
