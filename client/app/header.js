@@ -1,6 +1,7 @@
 Meteor.startup(function(){
 	Session.set('NotificationCount','0');
 	Meteor.subscribe('me');
+	Meteor.subscribe('allUsersOutMe');
 })
 
 Template.header.helpers({
@@ -24,5 +25,13 @@ Template.header.helpers({
 	},
 	currentUserId:function(){
 		return Meteor.userId();
+	}
+})
+
+Template.header.events({
+	'click #acceptInvitation':function(){
+		Meteor.call('acceptInvitation',this.whoSendInvitationId,function(err,result){
+
+		})
 	}
 })

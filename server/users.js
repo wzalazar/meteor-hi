@@ -16,6 +16,7 @@ Meteor.publish('allUsersOutMe', function() {
                                     'services.twitter.profile_image_url':1,
                                     'services.google.name':1,
                                     'services.google.picture':1,
+                                    'username':1
                                 }
                              });
 });

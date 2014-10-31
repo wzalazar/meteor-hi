@@ -33,7 +33,7 @@ Schema.UserInvitation = new SimpleSchema({
         }
     },
     dateSendInvitation: {
-        type: Date
+        type: [Date]
     },
     readInvitation: {
         type: Boolean

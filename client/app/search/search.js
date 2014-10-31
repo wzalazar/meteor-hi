@@ -5,3 +5,16 @@ Template.search.events({
 		})
 	}
 })
+
+Template.search.helpers({
+	isInvitationPending: function(){
+		var invitations= Meteor.users.find({'_id':this._id},
+						  { 
+						  	invitations:
+						  				{ 
+						  					$elemMatch:{'whoSendInvitationId':Meteor.userId(),'acceptInvitation':false} 
+						  				} 
+						  }).count();
+		return invitations;
+	}
+})
