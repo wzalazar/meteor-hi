@@ -28,7 +28,7 @@ es =
   "Match failed":  "Usuario o password incorrecto"
   "User not found":  "Usuario no encontrado"
   "Incorrect password": "Password incorrecto"
-  "Email already exists.": "Ese email no existe"
+  "Email already exists.": "Ese email ya existe"
   "Email is required": "Email requerido"
 
   error:

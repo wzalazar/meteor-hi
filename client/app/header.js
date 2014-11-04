@@ -5,23 +5,22 @@ Meteor.startup(function(){
 })
 
 Template.header.helpers({
-	invitations: function(){
-		var me= Meteor.users.find(Meteor.userId());
-		return me.invitations;
-	},
 	invitationsCount: function(){
 		var me= Meteor.users.findOne({'_id':Meteor.userId()});
 		var count= 0;
 		_.each(me.invitations,function(invitation){
-			console.log(invitation);
 			if (invitation.readInvitation==false) count++;
 		})
 		Session.set('NotificationCount',count);
 		return Session.get('NotificationCount');
 	},
 	pendingInvitations:function(){
-		var me= Meteor.users.findOne({'_id':Meteor.userId()});
-		return me.invitations;
+		var me= Meteor.users.findOne({ '_id':Meteor.userId() });
+		var invitations= [];
+		_.each(me.invitations,function(invitation){
+			if (invitation.readInvitation==false) invitations.push(invitation);
+		})
+		return invitations;
 	},
 	currentUserId:function(){
 		return Meteor.userId();
@@ -29,8 +28,16 @@ Template.header.helpers({
 })
 
 Template.header.events({
-	'click #acceptInvitation':function(){
+	'click #acceptInvitation':function(event){
+		event.preventDefault();
 		Meteor.call('acceptInvitation',this.whoSendInvitationId,function(err,result){
+
+		})
+	},
+
+	'click #readInvitation': function(event){
+		event.preventDefault();
+		Meteor.call('readInvitation',this.whoSendInvitationId,function(err,result){
 
 		})
 	}
