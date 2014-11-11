@@ -1,8 +1,8 @@
-Meteor.startup(function(){
-	Session.set('isFriend'); 		   // button friend
-	Session.set('thereAreInvitation');  // button Pending
-	Session.set('isSendingForMe');  // button Pending
-	Session.set('isSendingForFriend'); // button accept
+Tracker.autorun(function(){
+	Session.set('isFriend',false); 		   // button friend
+	Session.set('thereAreInvitation',false);  // button Pending
+	Session.set('isSendingForMe',false);  // button Pending
+	Session.set('isSendingForFriend',false); // button accept
 })
 
 Template.search.events({
@@ -14,94 +14,137 @@ Template.search.events({
 })
 
 Template.search.helpers({
-	isFriend: function(){
-		Session.set('isFriend',false);
-		return Session.get('isFriend');
+	isFriend: function(){		
+		var isFriend = false;
+
+		var me= Meteor.users.findOne({'_id':Meteor.userId()},
+							  { 
+							  	friends:
+							  				{ 
+							  					$elemMatch:{'friendId':this._id} 
+							  				} 
+							  });
+
+		_.each(me.friends,function(friend){
+			if (friend.friendId == this._id && friend.accept == true)
+				isFriend = true;
+		},this);
+		
+		return isFriend;
 	},
 
 	thereAreInvitation: function(){
-		var friend= Meteor.users.findOne({'_id':this._id},
-						  { 
-						  	invitations:
-						  				{ 
-						  					$elemMatch:{'whoSendInvitationId':Meteor.userId(),'readInvitation':false} 
-						  				} 
-						  });
-
-		var me= Meteor.users.findOne({'_id':Meteor.userId()},
-						  { 
-						  	invitations:
-						  				{ 
-						  					$elemMatch:{'whoSendInvitationId':this._id,'readInvitation':false} 
-						  				} 
-						  });
-
-		if (typeof (friend.invitations) != "undefined")
-		{
-			if (friend.invitations[0].readInvitation==false)
-			{
-				Session.set('thereAreInvitation',true);
-			}
+		try{
+			var thereAreInvitationMe= false;
+			var thereAreInvitationFriend= false;
 			
-		}
-	
-		
-		if (typeof (me.invitations) != "undefined")
-		{
-			if (me.invitations[0].readInvitation == false)
-			{
-				Session.set('thereAreInvitation',true);
-			} 
-		}
 
-	
-		return Session.get('thereAreInvitation')
+			/* I see if there are invitations sending for me */
+
+			var friend= Meteor.users.findOne({'_id':this._id},
+							  { 
+							  	invitations:
+							  				{ 
+							  					$elemMatch:{'whoSendInvitationId':Meteor.userId()} 
+							  				} 
+							  });
+
+			/* I see if there are invitations sending for my friend */
+
+			var me= Meteor.users.findOne({'_id':Meteor.userId()},
+							  { 
+							  	invitations:
+							  				{ 
+							  					$elemMatch:{'whoSendInvitationId':this._id} 
+							  				} 
+							  });
+			
+			console.log(friend);
+			if (typeof (friend.invitations) != "undefined")
+			{
+				_.each(friend.invitations,function(invitation){
+					if (invitation.whoSendInvitationId == Meteor.userId() && invitation.readInvitation==false){
+						thereAreInvitationFriend= true;
+					}
+				},this);
+			}
+		
+			
+			if (typeof (me.invitations) != "undefined")
+			{
+				_.each(me.invitations,function(invitation){
+					if (invitation.whoSendInvitationId == this._id && invitation.readInvitation==false){
+						thereAreInvitationMe= true;
+					}
+				},this);
+			}
+
+			if (thereAreInvitationFriend== true || thereAreInvitationMe== true){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		catch(err){
+			console.log(err);
+		}
+		
 	},
 
 	isSendingForMe: function(){
-		var friend= Meteor.users.findOne({'_id':this._id},
-						  { 
-						  	invitations:
-						  				{ 
-						  					$elemMatch:{'whoSendInvitationId':Meteor.userId(),'acceptInvitation':false} 
-						  				} 
-						  });
+		try{
+			var isSendingForMe= false;
+			var friend= Meteor.users.findOne({'_id':this._id},
+							  { 
+							  	invitations:
+							  				{ 
+							  					$elemMatch:{'whoSendInvitationId':Meteor.userId()} 
+							  				} 
+							  });
 
-		
+			
 
-		if (typeof (friend.invitations) != "undefined") {
-			if ((friend.invitations[0].readInvitation)==false)
-				Session.set('isSendingForMe',true);
-			else
-				Session.set('isSendingForMe',false);
+			if (typeof (friend.invitations) != "undefined") {
+				_.each(friend.invitations,function(invitation){
+					if (invitation.whoSendInvitationId == Meteor.userId() && invitation.readInvitation==false){
+						isSendingForMe= true;
+					}
+				},this);
+			}
+
+			return isSendingForMe;
 		}
-		else
-			Session.set('isSendingForMe',false);
-
-		console.log('isSendingForMe ',Session.get('isSendingForMe'));
-		return Session.get('isSendingForMe');
+		catch(err){
+			console.log('Error isSendingForMe');
+		}
+		return true;
 	},
 
 	isSendingForFriend: function(){
+		try{
+			var isSendingForFriend= false;
+			var me= Meteor.users.findOne({'_id':Meteor.userId()},
+							  { 
+							  	invitations:
+							  				{ 
+							  					$elemMatch:{'whoSendInvitationId':this._id} 
+							  				} 
+							  });
 
-		var me= Meteor.users.findOne({'_id':Meteor.userId()},
-						  { 
-						  	invitations:
-						  				{ 
-						  					$elemMatch:{'whoSendInvitationId':this._id,'acceptInvitation':false} 
-						  				} 
-						  });
-		if (typeof (me.invitations) != "undefined") {
-			if ((me.invitations[0].readInvitation)==false) 
-				Session.set('isSendingForFriend',true);
-			else
-				Session.set('isSendingForFriend',false);
+			if (typeof (me.invitations) != "undefined") {
+				_.each(me.invitations,function(invitation){
+					if (invitation.whoSendInvitationId == this._id && invitation.readInvitation==false){
+						isSendingForFriend= true;
+					}
+				},this);
+			}
+			return isSendingForFriend;
 		}
-		else
-			Session.set('isSendingForFriend',false);
+		catch(err){
+			console.log('Error isSendingForFriend');
+		}
 
-		console.log('isSendingForFriend ',Session.get('isSendingForFriend'));
-		return Session.get('isSendingForFriend');
 	}
 
 })

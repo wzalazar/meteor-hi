@@ -1,5 +1,28 @@
 Meteor.publish('allMyInvitations', function() {
-    return Meteor.users.find({ 'invitations.whoSendInvitationId':this.userId });
+    var users= Meteor.users.find({ 'invitations.whoSendInvitationId':this.userId },{ 
+                                fields: {
+                                    'services.facebook.name':1,
+                                    'services.facebook.picture':1,
+                                    'services.twitter.screenName':1,
+                                    'services.twitter.profile_image_url':1,
+                                    'services.google.name':1,
+                                    'services.google.picture':1,
+                                    'username':1,
+                                    'invitations.whoSendInvitationId':1,
+                                    'invitations.readInvitation':1
+                                }
+                             });
+
+
+
+   /**********************************************/
+   /*
+   /* I should delete the invitation that not me
+   /*
+   /***********************************************/
+
+
+    return users;
 });
 
 
@@ -69,8 +92,11 @@ Meteor.methods({
 
     acceptInvitation:function(whoSendInvitationId){
 
-    		Meteor.users.update({'_id':this.userId,'invitations.whoSendInvitationId':whoSendInvitationId},
-    						{$set:{'invitations.$.acceptInvitation':true,'invitations.$.readInvitation':true}});
+    		Meteor.users.update({'_id':this.userId,'friends.friendId':whoSendInvitationId},
+    						{$set:{'friends.$.accept':true}},{multi: true})
+
+            Meteor.users.update({'_id':this.userId,'invitations.whoSendInvitationId':whoSendInvitationId},
+                            {$set:{'invitations.$.acceptInvitation':true,'invitations.$.readInvitation':true}});
     	
     },
 
