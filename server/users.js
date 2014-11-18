@@ -21,6 +21,8 @@ Meteor.publish('allUsersOutMe', function() {
                              });
 });
 
+
+
 Meteor.users.allow({
     insert: function() {
         return false;

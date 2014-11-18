@@ -74,7 +74,7 @@ Meteor.methods({
 
             /*******************************/
             /*
-            /* Add me for the friend's collection
+            /* Add me in the friends's collection
             /*
             /*******************************/
 
@@ -83,21 +83,51 @@ Meteor.methods({
 	    else{
 	    	var date= new Date();
     		Meteor.users.update({'_id':friendId,'invitations.whoSendInvitationId':this.userId},
-    							{ $addToSet: { 'invitations.$.dateSendInvitation' : date } } );
-
-            Meteor.users.update({'_id':friendId,'invitations.whoSendInvitationId':this.userId},
-                                { $set: { 'invitations.$.readInvitation' : false } } );
+    							{ $addToSet: { 'invitations.$.dateSendInvitation' : date, 'invitations.$.readInvitation' : false } } );
 	    }
     },
 
     acceptInvitation:function(whoSendInvitationId){
 
+            /*******************************************/
+            /* update my friends
+            /*******************************************/
+
     		Meteor.users.update({'_id':this.userId,'friends.friendId':whoSendInvitationId},
     						{$set:{'friends.$.accept':true}},{multi: true})
 
+            /*******************************************/
+            /* update in my friend
+            /*******************************************/
+
+            Meteor.users.update({'_id':whoSendInvitationId,'friends.friendId':this.userId},
+                            {$set:{'friends.$.accept':true}},{multi: true})
+
+            /*******************************************/
+            /* update the both invitations
+            /*******************************************/
+
             Meteor.users.update({'_id':this.userId,'invitations.whoSendInvitationId':whoSendInvitationId},
                             {$set:{'invitations.$.acceptInvitation':true,'invitations.$.readInvitation':true}});
-    	
+
+
+            Meteor.users.update({'_id':whoSendInvitationId,'invitations.whoSendInvitationId':this.userId},
+                            {$set:{'invitations.$.acceptInvitation':true,'invitations.$.readInvitation':true}});
+
+            /*******************************************/
+            /* Create new room
+            /*******************************************/
+
+            var room= {
+                        name:'',
+                        dateCreate: new Date(),
+                        users:[
+                            {'userId': this.userId},
+                            {'userId': whoSendInvitationId}
+                        ]
+            }
+
+            Rooms.insert(room);
     },
 
     readInvitation: function(whoSendInvitationId){

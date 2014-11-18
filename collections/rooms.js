@@ -31,7 +31,8 @@ Schema.Messages= new SimpleSchema({
 
 Schema.Rooms= new SimpleSchema({
     name:{
-        type: String   
+        type: String,
+        optional: true
     },
     dateCreate: {
         type: Date
